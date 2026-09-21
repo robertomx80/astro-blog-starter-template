@@ -1,0 +1,41 @@
+---
+import Layout from "../layouts/Base.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { profile, projects } from "../site.config";
+---
+
+<Layout
+	title={`Proyectos · ${profile.name}`}
+	description={`Selección de proyectos y trabajos de ${profile.name}.`}
+>
+	<header class="page-head">
+		<span class="section-label">Portfolio</span>
+		<h1>Proyectos</h1>
+		<p>
+			Una selección del trabajo que mejor representa cómo resuelvo problemas: producto real, código
+			mantenible y decisiones justificadas.
+		</p>
+	</header>
+
+	<div class="grid">
+		{projects.map((p) => <ProjectCard {...p} />)}
+	</div>
+</Layout>
+
+<style>
+	.page-head {
+		max-width: var(--prose-width);
+		margin-bottom: 3rem;
+	}
+
+	.page-head h1 {
+		font-size: clamp(2rem, 5vw, 2.8rem);
+		margin-bottom: 0.75rem;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 1rem;
+	}
+</style>

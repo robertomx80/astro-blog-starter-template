@@ -1,0 +1,163 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	tags: readonly string[];
+	url?: string | null;
+	repo?: string | null;
+	year?: string;
+	featured?: boolean;
+}
+
+const { title, description, tags, url, repo, year, featured = false } = Astro.props;
+const primary = url ?? repo ?? null;
+---
+
+<article class:list={["card", { featured }]}>
+	<header>
+		<h3>
+			{
+				primary ? (
+					<a href={primary} target="_blank" rel="noopener noreferrer">
+						{title}
+						<svg
+							class="arrow"
+							viewBox="0 0 16 16"
+							width="14"
+							height="14"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.8"
+							aria-hidden="true"
+						>
+							<path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" stroke-linecap="round" />
+						</svg>
+					</a>
+				) : (
+					title
+				)
+			}
+		</h3>
+		{year && <span class="year">{year}</span>}
+	</header>
+
+	<p>{description}</p>
+
+	<div class="meta">
+		<div class="tags">
+			{tags.map((t) => <span class="tag">{t}</span>)}
+		</div>
+		{
+			repo && url && (
+				<a class="repo" href={repo} target="_blank" rel="noopener noreferrer">
+					Código
+				</a>
+			)
+		}
+	</div>
+</article>
+
+<style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		padding: 1.5rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		background: var(--bg-elevated);
+		transition:
+			border-color 0.2s ease,
+			transform 0.2s ease,
+			background 0.2s ease;
+	}
+
+	.card:hover {
+		border-color: var(--border-strong);
+		background: var(--bg-subtle);
+		transform: translateY(-2px);
+	}
+
+	.card.featured {
+		background:
+			linear-gradient(var(--bg-elevated), var(--bg-elevated)) padding-box,
+			linear-gradient(135deg, var(--accent-glow), transparent 55%) border-box;
+		border-color: transparent;
+	}
+
+	header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	h3 {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+	}
+
+	h3 a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	h3 a:hover {
+		color: var(--accent);
+	}
+
+	.arrow {
+		opacity: 0.5;
+		transition:
+			transform 0.2s ease,
+			opacity 0.2s ease;
+	}
+
+	h3 a:hover .arrow {
+		opacity: 1;
+		transform: translate(2px, -2px);
+	}
+
+	.year {
+		flex-shrink: 0;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--text-faint);
+	}
+
+	p {
+		margin: 0;
+		font-size: 0.925rem;
+		color: var(--text-muted);
+	}
+
+	.meta {
+		margin-top: auto;
+		padding-top: 0.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+
+	.repo {
+		flex-shrink: 0;
+		font-size: 0.8rem;
+		color: var(--text-faint);
+		text-decoration: none;
+	}
+
+	.repo:hover {
+		color: var(--accent);
+	}
+</style>

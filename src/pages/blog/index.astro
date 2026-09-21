@@ -1,111 +1,114 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
+import Layout from "../../layouts/Base.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { getCollection } from "astro:content";
+import { profile } from "../../site.config";
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<Layout
+	title={`Blog · ${profile.name}`}
+	description={`Artículos y notas técnicas de ${profile.name}.`}
+>
+	<header class="page-head">
+		<span class="section-label">Escritos</span>
+		<h1>Blog</h1>
+		<p>Notas sobre desarrollo, arquitectura y las decisiones detrás de lo que construyo.</p>
+	</header>
+
+	<ul class="posts">
+		{
+			posts.map((post) => (
+				<li>
+					<a href={`/blog/${post.id}/`}>
+						<span class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</span>
+						<div class="body">
+							<h2>{post.data.title}</h2>
+							<p>{post.data.description}</p>
+						</div>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+
+	{posts.length === 0 && <p class="empty">Todavía no hay publicaciones.</p>}
+</Layout>
+
+<style>
+	.page-head {
+		max-width: var(--prose-width);
+		margin-bottom: 3rem;
+	}
+
+	.page-head h1 {
+		font-size: clamp(2rem, 5vw, 2.8rem);
+		margin-bottom: 0.75rem;
+	}
+
+	.posts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-top: 1px solid var(--border);
+	}
+
+	.posts a {
+		display: grid;
+		grid-template-columns: 8rem 1fr;
+		gap: 1.5rem;
+		padding: 1.6rem 1rem;
+		margin: 0 -1rem;
+		border-bottom: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		text-decoration: none;
+		transition: background 0.18s ease;
+	}
+
+	.posts a:hover {
+		background: var(--bg-elevated);
+	}
+
+	.date {
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		color: var(--text-faint);
+		padding-top: 0.35rem;
+	}
+
+	.body h2 {
+		margin: 0 0 0.35rem;
+		font-size: 1.2rem;
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.posts a:hover .body h2 {
+		color: var(--accent);
+	}
+
+	.body p {
+		margin: 0;
+		font-size: 0.92rem;
+		color: var(--text-muted);
+	}
+
+	.empty {
+		color: var(--text-faint);
+	}
+
+	@media (max-width: 620px) {
+		.posts a {
+			grid-template-columns: 1fr;
+			gap: 0.4rem;
+		}
+		.date {
+			padding-top: 0;
+		}
+	}
+</style>

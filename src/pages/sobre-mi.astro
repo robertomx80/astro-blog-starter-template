@@ -1,0 +1,215 @@
+---
+import Layout from "../layouts/Base.astro";
+import { profile, experience, skills } from "../site.config";
+---
+
+<Layout
+	title={`Sobre mí · ${profile.name}`}
+	description={`Trayectoria, experiencia y stack técnico de ${profile.name}.`}
+>
+	<header class="page-head">
+		<span class="section-label">Sobre mí</span>
+		<h1>{profile.role}</h1>
+		{profile.bio.map((p) => <p>{p}</p>)}
+
+		<div class="actions">
+			<a class="btn primary" href={`mailto:${profile.email}`}>Contactar</a>
+			{
+				profile.resume && (
+					<a class="btn" href={profile.resume} target="_blank" rel="noopener noreferrer">
+						Descargar CV
+					</a>
+				)
+			}
+		</div>
+	</header>
+
+	<!-- ── Experiencia ──────────────────────────────────── -->
+	<section class="block">
+		<span class="section-label">Trayectoria</span>
+		<h2>Experiencia</h2>
+
+		<ol class="timeline">
+			{
+				experience.map((job) => (
+					<li>
+						<div class="marker" aria-hidden="true" />
+						<div class="entry">
+							<span class="period">{job.period}</span>
+							<h3>
+								{job.role} <span class="company">· {job.company}</span>
+							</h3>
+							<p>{job.description}</p>
+						</div>
+					</li>
+				))
+			}
+		</ol>
+	</section>
+
+	<!-- ── Skills ───────────────────────────────────────── -->
+	<section class="block">
+		<span class="section-label">Stack</span>
+		<h2>Herramientas</h2>
+
+		<div class="skills">
+			{
+				skills.map((g) => (
+					<div class="skill-group">
+						<h3>{g.group}</h3>
+						<div class="tags">
+							{g.items.map((i) => (
+								<span class="tag">{i}</span>
+							))}
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page-head {
+		max-width: var(--prose-width);
+	}
+
+	.page-head h1 {
+		font-size: clamp(2rem, 5vw, 2.8rem);
+		margin-bottom: 1.25rem;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		margin-top: 1.75rem;
+	}
+
+	.btn {
+		display: inline-block;
+		padding: 0.6rem 1.15rem;
+		border: 1px solid var(--border-strong);
+		border-radius: var(--radius-sm);
+		background: var(--bg-subtle);
+		color: var(--text);
+		font-size: 0.9rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition:
+			background 0.18s ease,
+			border-color 0.18s ease;
+	}
+
+	.btn:hover {
+		background: var(--bg-elevated);
+		border-color: var(--text-faint);
+	}
+
+	.btn.primary {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #0a0a0b;
+		font-weight: 600;
+	}
+
+	.btn.primary:hover {
+		background: #a3bbff;
+		border-color: #a3bbff;
+		color: #0a0a0b;
+	}
+
+	.block {
+		padding-top: 4.5rem;
+	}
+
+	.block h2 {
+		margin-bottom: 2rem;
+	}
+
+	/* ── Timeline ── */
+	.timeline {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.timeline li {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1.5rem 1fr;
+		gap: 1.25rem;
+		padding-bottom: 2.5rem;
+	}
+
+	.timeline li:last-child {
+		padding-bottom: 0;
+	}
+
+	/* Línea vertical que conecta los puntos */
+	.timeline li:not(:last-child)::before {
+		content: "";
+		position: absolute;
+		left: 0.44rem;
+		top: 1.1rem;
+		bottom: 0;
+		width: 1px;
+		background: var(--border);
+	}
+
+	.marker {
+		width: 9px;
+		height: 9px;
+		margin-top: 0.62rem;
+		border-radius: 50%;
+		background: var(--accent);
+		box-shadow: 0 0 0 4px var(--accent-soft);
+	}
+
+	.period {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.04em;
+		color: var(--text-faint);
+		margin-bottom: 0.3rem;
+	}
+
+	.entry h3 {
+		margin: 0 0 0.5rem;
+		font-size: 1.1rem;
+	}
+
+	.company {
+		font-weight: 400;
+		color: var(--text-muted);
+	}
+
+	.entry p {
+		margin: 0;
+		max-width: var(--prose-width);
+		font-size: 0.94rem;
+	}
+
+	/* ── Skills ── */
+	.skills {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+		gap: 1.75rem;
+	}
+
+	.skill-group h3 {
+		margin: 0 0 0.85rem;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-faint);
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+</style>

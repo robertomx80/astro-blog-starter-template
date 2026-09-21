@@ -1,5 +1,6 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
+// Metadatos globales del sitio.
+// Los datos personales (bio, proyectos, experiencia) viven en `src/site.config.ts`.
+import { profile } from "./site.config";
 
-export const SITE_TITLE = "Astro Blog";
-export const SITE_DESCRIPTION = "Welcome to my website!";
+export const SITE_TITLE = profile.name;
+export const SITE_DESCRIPTION = `${profile.role}. ${profile.tagline}`;
